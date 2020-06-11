@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "xmldoc": "*",
     "base-x": "*"
   },
   "devDependencies": {
