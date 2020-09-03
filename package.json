@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "xmldoc": "*",
     "base-x": "*",
-    "dateformat": "*"
+    "dateformat": "^3.0.3",
+    "xmldoc": "*"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
