@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "xmldoc": "*",
-    "base-x": "*"
+    "base-x": "*",
+    "dateformat": "*"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
