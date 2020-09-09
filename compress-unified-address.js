@@ -1,5 +1,6 @@
 const zlib = require('zlib');
 const baseCode = require('./basecode');
+const ZLIB_COMPRESSION_LEVEL = 8;
 
 // keep only uniques
 const uniq = function (ydata) {
@@ -54,7 +55,7 @@ function encode(datastring) {
     const pruned = replaceBulk(datastring,addresses,reference);
     const reformatted = addresses.join(',')+'|'+pruned;
     // encode
-    return baseCode.recode('hex','base58',zlib.deflateSync(reformatted,{level:zlib.constants.Z_BEST_COMPRESSION}).toString('hex'));
+    return baseCode.recode('hex','base58',zlib.deflateSync(reformatted,{level:ZLIB_COMPRESSION_LEVEL}).toString('hex'));
   } catch(e) {
     return null;
   }
