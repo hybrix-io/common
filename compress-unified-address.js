@@ -1,5 +1,5 @@
 const zlib = require('zlib');
-const baseCode = require('./common/basecode');
+const baseCode = require('./basecode');
 
 // keep only uniques
 const uniq = function (ydata) {
