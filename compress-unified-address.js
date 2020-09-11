@@ -64,18 +64,20 @@ function encode(datastring) {
 
 function decode(datastring) {
   const version = datastring.substr(0,1);
-  let result;
+  let result = null;
   try {
     if (version==='0') {
       // decompress
       const decompressed = zlib.inflateSync(new Buffer.from( baseCode.recode('base58','hex', datastring.substr(1) ) ,'hex')).toString();
       // now reverse the operation... (we prefix reference numbers and addresses with semicolon to avoid replacing numbers in token names)
-      const parts = decompressed.split('|');
-      const prefixedAddresses = parts[0].split(',').map( (val) => { return String(':'+val); });
-      const reference = prefixedAddresses.map( (val,idx) => { return String(':'+idx); });
-      const pruned = parts[1];
-      // restore all addresses in string by reference to addresses in array  
-      result = replaceBulk(pruned,reference,prefixedAddresses);
+      if (typeof decompressed === 'string') {
+        const parts = decompressed.split('|');
+        const prefixedAddresses = parts[0].split(',').map( (val) => { return String(':'+val); });
+        const reference = prefixedAddresses.map( (val,idx) => { return String(':'+idx); });
+        const pruned = parts[1];
+        // restore all addresses in string by reference to addresses in array  
+        result = replaceBulk(pruned,reference,prefixedAddresses);
+      }
     }
   } catch(e) {
     result = null;
