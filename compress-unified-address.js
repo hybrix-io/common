@@ -48,6 +48,7 @@ function replaceBulk (str, findArray, replaceArray) {
 
 function encode(datastring) {
   try {
+    const version = 0;
     // first gather all unique addresses
     const addresses = uniq(datastring.split(',').map( val => { return val.split(':')[1]; }));
     const reference = addresses.map( (val,idx) => { return String(idx); });
@@ -55,26 +56,33 @@ function encode(datastring) {
     const pruned = replaceBulk(datastring,addresses,reference);
     const reformatted = addresses.join(',')+'|'+pruned;
     // encode
-    return baseCode.recode('hex','base58',zlib.deflateSync(reformatted,{level:ZLIB_COMPRESSION_LEVEL}).toString('hex'));
+    return version + baseCode.recode('hex','base58',zlib.deflateSync(reformatted,{level:ZLIB_COMPRESSION_LEVEL}).toString('hex'));
   } catch(e) {
     return null;
   }
 }
 
 function decode(datastring) {
+  const version = datastring.substr(0,1);
+  let result = null;
   try {
-    // decompress
-    const decompressed = zlib.inflateSync(new Buffer.from( baseCode.recode('base58','hex',datastring) ,'hex')).toString();
-    // now reverse the operation... (we prefix reference numbers and addresses with semicolon to avoid replacing numbers in token names)
-    const parts = decompressed.split('|');
-    const prefixedAddresses = parts[0].split(',').map( (val) => { return String(':'+val); });
-    const reference = prefixedAddresses.map( (val,idx) => { return String(':'+idx); });
-    const pruned = parts[1];
-    // restore all addresses in string by reference to addresses in array  
-    return replaceBulk(pruned,reference,prefixedAddresses);
+    if (version==='0') {
+      // decompress
+      const decompressed = zlib.inflateSync(new Buffer.from( baseCode.recode('base58','hex', datastring.substr(1) ) ,'hex')).toString();
+      // now reverse the operation... (we prefix reference numbers and addresses with semicolon to avoid replacing numbers in token names)
+      if (typeof decompressed === 'string') {
+        const parts = decompressed.split('|');
+        const prefixedAddresses = parts[0].split(',').map( (val) => { return String(':'+val); });
+        const reference = prefixedAddresses.map( (val,idx) => { return String(':'+idx); });
+        const pruned = parts[1];
+        // restore all addresses in string by reference to addresses in array  
+        result = replaceBulk(pruned,reference,prefixedAddresses);
+      }
+    }
   } catch(e) {
-    return null;
+    result = null;
   }
+  return result;
 }
 
 exports.encode = encode;
