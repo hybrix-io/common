@@ -27,11 +27,13 @@ function isNumber (s) {
 }
 
 function symbolIsValid (assetNames, symbol) {
-  const symbols = Object.keys(assetNames);
-  const isBitcoin = symbol === 'bitcoin';
-  const symbolExists = symbols.includes(symbol) || isBitcoin;
+  if (typeof symbol === 'undefined') return {error: 0};
+  if (symbol === 'bitcoin') return {error: 0};
 
-  return symbolExists;
+  const symbols = Object.keys(assetNames);
+  return symbols.includes(symbol)
+    ? {error: 0}
+    : {error: 1, data: `Unknown symbol '${symbol}'`};
 }
 
 function isString (x) {
@@ -39,13 +41,16 @@ function isString (x) {
 }
 
 function validate (symbol, amount, addr, timestamp, assetNames) {
-  const hasValidAmount = amountIsEmpty(amount) ? true : amountIsValid(amount);
-  const hasValidTimestamp = timestamp !== null ? isNumber(timestamp) : true;
+  const hasValidAmount = amountIsEmpty(amount) || amountIsValid(amount);
+  if (!hasValidAmount) return {error: 1, data: 'Expected numerical or no amount'};
 
-  return symbolIsValid(assetNames, symbol) &&
-    hasValidAmount &&
-    hasValidTimestamp &&
-    addressIsValid(addr);
+  const hasValidTimestamp = typeof timestamp === 'undefined' || (timestamp !== null && isNumber(timestamp));
+  if (!hasValidTimestamp) return {error: 1, data: 'Expected numerical or no timestamp'};
+
+  const hasValidAddress = addressIsValid(addr);
+  if (!hasValidAddress) return {error: 1, data: 'Expected valid address.'};
+
+  return symbolIsValid(assetNames, symbol);
 }
 
 function parseToObject (s) {
