@@ -27,8 +27,11 @@ function isNumber (s) {
 }
 
 function symbolIsValid (assetNames, symbol) {
-  if (typeof symbol === 'undefined') return {error: 0};
+  // prefix exceptions for bitcoin(-like) currencies
+  if (symbol === 'bitcoincash') return {error: 0};
   if (symbol === 'bitcoin') return {error: 0};
+
+  if (typeof symbol === 'undefined') return {error: 0};
 
   const symbols = Object.keys(assetNames);
   return symbols.includes(symbol)
