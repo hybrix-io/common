@@ -73,31 +73,27 @@ function getParameters (s) {
 }
 
 function getTimestamp (s) {
-  const t_ = s.match(/until=(.*?)&/);
-  const t = t_ === null ? s.match(/until=(.*)/) : t_;
-
-  return t === null ? t : t.pop();
+  const t = s.match(/[?&]until=(.*?)(&|$)/);
+  return t === null ? t : t[1];
 }
 
 function getAmount (s) {
-  const a_ = s.match(/amount=(.*?)&/);
-  const a = a_ === null ? s.match(/amount=(.*)/) : a_;
-
-  return a === null ? '' : a.pop();
+  const a = s.match(/[?&]amount=(.*?)(&|$)/);
+  return a === null ? '' : a[1];
 }
 
 function getMessage (s) {
-  const msg = s.match(/message=(.*)/);
-  return msg === null ? msg : msg.pop();
+  const msg = s.match(/[?&]message=[^&]+(&|$)/);
+  return msg === null ? msg : msg[1];
 }
 
 function getSymbol (s) {
-  return s.indexOf(':')===-1?null:s.match(/[^:]*/i)[0];
+  return s.match(/[^:]+/)[0];
 }
 
 function getAddress (s) {
-  const addr = s.indexOf(':')===-1 ? [s] :( s.indexOf('?')===-1?s.match(/:(.*)/):s.match(/:(.*)\?/) );
-  return addr === null ? addr : addr.pop();
+  const addr = s.match(/^(\w|\.)+:([^?]*)(\?|$)/);
+  return addr === null ? addr : addr[2];
 }
 
 exports.validations = {
