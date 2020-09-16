@@ -92,7 +92,7 @@ function getSymbol (s) {
 }
 
 function getAddress (s) {
-  const addr = s.match(/^(\w|\.)+:([^?]*)(\?|$)/);
+  const addr = s.match(/^([^:]+:)?([^?]*)(\?|$)/);
   return addr === null ? addr : addr[2];
 }
 
