@@ -27,11 +27,16 @@ function isNumber (s) {
 }
 
 function symbolIsValid (assetNames, symbol) {
-  const symbols = Object.keys(assetNames);
-  const isBitcoin = symbol === 'bitcoin';
-  const symbolExists = symbols.includes(symbol) || isBitcoin;
+  // prefix exceptions for bitcoin(-like) currencies
+  if (symbol === 'bitcoincash') return {error: 0};
+  if (symbol === 'bitcoin') return {error: 0};
 
-  return symbolExists;
+  if (typeof symbol === 'undefined') return {error: 0};
+
+  const symbols = Object.keys(assetNames);
+  return symbols.includes(symbol)
+    ? {error: 0}
+    : {error: 1, data: `Unknown symbol '${symbol}'`};
 }
 
 function isString (x) {
@@ -39,13 +44,16 @@ function isString (x) {
 }
 
 function validate (symbol, amount, addr, timestamp, assetNames) {
-  const hasValidAmount = amountIsEmpty(amount) ? true : amountIsValid(amount);
-  const hasValidTimestamp = timestamp !== null ? isNumber(timestamp) : true;
+  const hasValidAmount = amountIsEmpty(amount) || amountIsValid(amount);
+  if (!hasValidAmount) return {error: 1, data: 'Expected numerical or no amount'};
 
-  return symbolIsValid(assetNames, symbol) &&
-    hasValidAmount &&
-    hasValidTimestamp &&
-    addressIsValid(addr);
+  const hasValidTimestamp = typeof timestamp === null || isNumber(timestamp);
+  if (!hasValidTimestamp) return {error: 1, data: 'Expected numerical or no timestamp'};
+
+  const hasValidAddress = addressIsValid(addr);
+  if (!hasValidAddress) return {error: 1, data: 'Expected valid address.'};
+
+  return symbolIsValid(assetNames, symbol);
 }
 
 function parseToObject (s) {
@@ -68,31 +76,28 @@ function getParameters (s) {
 }
 
 function getTimestamp (s) {
-  const t_ = s.match(/until=(.*?)&/);
-  const t = t_ === null ? s.match(/until=(.*)/) : t_;
-
-  return t === null ? t : t.pop();
+  const t = s.match(/[?&]until=([^&]+)(&|$)/);
+  return t === null ? t : t[1];
 }
 
 function getAmount (s) {
-  const a_ = s.match(/amount=(.*?)&/);
-  const a = a_ === null ? s.match(/amount=(.*)/) : a_;
-
-  return a === null ? '' : a.pop();
+  const a = s.match(/[?&]amount=(.*?)(&|$)/);
+  return a === null ? '' : a[1];
 }
 
 function getMessage (s) {
-  const msg = s.match(/message=(.*)/);
-  return msg === null ? msg : msg.pop();
+  const msg = s.match(/[?&]message=([^&]+)(&|$)/);
+  return msg === null ? msg : msg[1];
 }
 
 function getSymbol (s) {
-  return s.match(/[^:]*/i)[0];
+  const symbol = s.match(/([^:]+):/);
+  return symbol === null ? null : symbol[1];
 }
 
 function getAddress (s) {
-  const addr = s.match(/:(.*)\?/);
-  return addr === null ? addr : addr.pop();
+  const addr = s.match(/^([^:]+:)?([^?]*)(\?|$)/);
+  return addr === null ? addr : addr[2];
 }
 
 exports.validations = {
