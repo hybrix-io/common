@@ -92,11 +92,11 @@ function getMessage (s) {
 }
 
 function getSymbol (s) {
-  return s.match(/[^:]*/i)[0];
+  return s.indexOf(':')===-1?null:s.match(/[^:]*/i)[0];
 }
 
 function getAddress (s) {
-  const addr = s.indexOf('?')===-1?s.match(/:(.*)/):s.match(/:(.*)\?/);
+  const addr = s.indexOf(':')===-1 ? [s] :( s.indexOf('?')===-1?s.match(/:(.*)/):s.match(/:(.*)\?/) );
   return addr === null ? addr : addr.pop();
 }
 
