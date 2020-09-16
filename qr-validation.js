@@ -96,7 +96,7 @@ function getSymbol (s) {
 }
 
 function getAddress (s) {
-  const addr = s.match(/:(.*)\?/);
+  const addr = s.indexOf('?')===-1?s.match(/:(.*)/):s.match(/:(.*)\?/);
   return addr === null ? addr : addr.pop();
 }
 
