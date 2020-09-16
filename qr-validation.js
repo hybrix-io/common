@@ -47,7 +47,7 @@ function validate (symbol, amount, addr, timestamp, assetNames) {
   const hasValidAmount = amountIsEmpty(amount) || amountIsValid(amount);
   if (!hasValidAmount) return {error: 1, data: 'Expected numerical or no amount'};
 
-  const hasValidTimestamp = typeof timestamp === 'undefined' || (timestamp !== null && isNumber(timestamp));
+  const hasValidTimestamp = typeof timestamp === null || isNumber(timestamp);
   if (!hasValidTimestamp) return {error: 1, data: 'Expected numerical or no timestamp'};
 
   const hasValidAddress = addressIsValid(addr);
