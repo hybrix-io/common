@@ -76,7 +76,7 @@ function getParameters (s) {
 }
 
 function getTimestamp (s) {
-  const t = s.match(/[?&]until=(.*?)(&|$)/);
+  const t = s.match(/[?&]until=([^&])+(&|$)/);
   return t === null ? t : t[1];
 }
 
@@ -86,7 +86,7 @@ function getAmount (s) {
 }
 
 function getMessage (s) {
-  const msg = s.match(/[?&]message=[^&]+(&|$)/);
+  const msg = s.match(/[?&]message=([^&])+(&|$)/);
   return msg === null ? msg : msg[1];
 }
 
