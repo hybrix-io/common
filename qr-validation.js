@@ -91,7 +91,8 @@ function getMessage (s) {
 }
 
 function getSymbol (s) {
-  return s.match(/[^:]+:/)[0];
+  const symbol = s.match(/[^:]+:/);
+  return symbol === null ? null : symbol[0];
 }
 
 function getAddress (s) {
