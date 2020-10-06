@@ -17,7 +17,7 @@ function replaceBulk (str, findArray, replaceArray) {
 
 function generateAsciiTable () {
   let x = '';
-  for (let i = 0; i < 255; i++) { x = x + String.fromCharCode(i); }
+  for (let i = 0; i < 256; i++) { x = x + String.fromCharCode(i); }
   return x;
 }
 
@@ -27,9 +27,6 @@ function getEncoding (code) {
   switch (code) {
     case 'base64':
       return 'base64';
-    case 'ascii':
-    case 'base256':
-      return asciiTable;
     case 'base58':
       return '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     case 'hex':
@@ -45,6 +42,9 @@ function getEncoding (code) {
     case 'bech32':
     case 'RFC4648':
       return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    case 'ascii':
+    case 'base256':
+      // DEPRECATED: return asciiTable; -> base-x contains a bug which makes it unable to handle 256 character alphabet
     case 'string':
     case 'utf-8':
     default:
