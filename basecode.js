@@ -44,7 +44,7 @@ function getEncoding (code) {
       return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
     case 'ascii':
     case 'base256':
-      // DEPRECATED: return asciiTable; -> base-x contains a bug which makes it unable to handle 256 character alphabets!
+      // DEPRECATED: return asciiTable; -> base-x contains a bug which makes it unable to handle 256 character alphabet
     case 'string':
     case 'utf-8':
     default:
