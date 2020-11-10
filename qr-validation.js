@@ -26,34 +26,28 @@ function isNumber (s) {
   return !isNaN(Number(s));
 }
 
-function symbolIsValid (assetNames, symbol) {
-  // prefix exceptions for bitcoin(-like) currencies
-  if (symbol === 'bitcoincash') return {error: 0};
-  if (symbol === 'bitcoin') return {error: 0};
-
-  if (typeof symbol === 'undefined') return {error: 0};
-
-  const symbols = Object.keys(assetNames);
-  return symbols.includes(symbol)
+function symbolIsValid (symbol) {
+  return symbol === null || typeof symbol === 'string'
     ? {error: 0}
-    : {error: 1, data: `Unknown symbol '${symbol}'`};
+    : {error: 1, data: `Expected string symbol'`};
 }
 
 function isString (x) {
   return typeof x === 'string';
 }
 
-function validate (symbol, amount, addr, timestamp, assetNames) {
+function validate (symbol, amount, addr, timestamp) {
   const hasValidAmount = amountIsEmpty(amount) || amountIsValid(amount);
   if (!hasValidAmount) return {error: 1, data: 'Expected numerical or no amount'};
 
-  const hasValidTimestamp = typeof timestamp === null || isNumber(timestamp);
+  const hasValidTimestamp = timestamp === null || isNumber(timestamp);
   if (!hasValidTimestamp) return {error: 1, data: 'Expected numerical or no timestamp'};
+  if (timestamp && timestamp < Date.now()) return {error: 1, data: 'Time stamp has expired.'};
 
   const hasValidAddress = addressIsValid(addr);
   if (!hasValidAddress) return {error: 1, data: 'Expected valid address.'};
 
-  return symbolIsValid(assetNames, symbol);
+  return symbolIsValid(symbol);
 }
 
 function parseToObject (s) {
