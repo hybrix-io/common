@@ -85,8 +85,12 @@ function getMessage (s) {
 }
 
 function getSymbol (s) {
-  const symbol = s.match(/([^:]+):/);
-  return symbol === null ? null : symbol[1];
+  const symbolMatch = s.match(/([^:]+):/);
+  if (symbolMatch === null) return null;
+  let symbol = symbolMatch[1];
+  if (symbol === 'bitcoin') symbol = 'btc';
+  else if (symbol === 'bitcoincash') symbol = 'bch';
+  return symbol;
 }
 
 function getAddress (s) {

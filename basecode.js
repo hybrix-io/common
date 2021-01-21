@@ -1,4 +1,5 @@
 const basex = require('./base-x.js');
+const {Buffer} = require('buffer');
 
 // replace multiple strings
 // example: replacebulk("testme",['es','me'],['1','2']); => "t1t2"
