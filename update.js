@@ -1,5 +1,3 @@
-const xmldoc = require('xmldoc');
-
 function compareVersions (a, b) {
   const splitA = a.split('.');
   const splitB = b.split('.');
@@ -13,20 +11,12 @@ function compareVersions (a, b) {
   return 0;
 }
 
-function getLatestVersion (xmlString, component) {
-  try {
-    const document = new xmldoc.XmlDocument(xmlString);
-    const latestVersion = document.children
-      .filter(node => node.name === 'Contents') // get content elements
-      .map(node => node.children.filter(x => x.name === 'Key')[0].val) // get the key value  "tui-wallet/v0.5.0/hybrixd.tui-wallet.v0.5.0.zip"
-      .filter(key => key.startsWith(component + '/')) // check if matches the requested component
-      .map(key => key.split('/')[1].substr(1)) // get the version "0.5.0" ( drop "$component/v")
-      .filter(version => version !== 'atest') // filter '(l)atest'
-      .sort(compareVersions)[0];
-    return latestVersion;
-  } catch (e) {
-    return 'error';
-  }
+function getLatestVersion (htmlString) {
+  const versions = htmlString // html from download.hybrix.io/releases/$COMPONENT/
+    .match(/v[\d.]+/g) // ['v0.1.2',...]
+    .map(version => version.substr(1)) // ['0.1.2',...]
+    .sort(compareVersions);
+  return versions.length > 0 ? versions[0] : 'error';
 }
 
 exports.compareVersions = compareVersions;

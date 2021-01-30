@@ -48,7 +48,7 @@ fi
 
 while read -r FILE; do
     if [ -f "$FILE" ]; then
-        "$ESLINT" "$FILE"  --fix --quiet -c "$HYBRIXD/common/hooks/eslintrc.js"
+        "$ESLINT" "$FILE"  --fix --quiet -c "$HYBRIXD/common/.eslintrc.js"
 
         if [ "$?" -eq 0 ]; then
             echo "\033[32mESLint Passed: $FILE\033[0m"
