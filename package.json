@@ -4,23 +4,25 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "base-x": "*",
+    "base-x": "^3.0.8",
     "dateformat": "^3.0.3",
     "xmldoc": "*"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
-    "eslint": "^5.8.0",
-    "eslint-config-semistandard": "*",
-    "eslint-config-standard": "*",
-    "eslint-plugin-import": "*",
-    "eslint-plugin-node": "*",
-    "eslint-plugin-promise": "*",
-    "eslint-plugin-react": "*",
-    "eslint-plugin-standard": "*"
+    "eslint": "^5.16.0",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "*",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-standard": "^5.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "audit": "sh scripts/npm/audit.sh",
     "setup": "sh ./scripts/setup/setup.sh",
     "diag": "sh scripts/diag/diag.sh",
     "lint": "sh ./scripts/lint/lint.sh common"
